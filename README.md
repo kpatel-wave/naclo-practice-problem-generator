@@ -16,8 +16,8 @@ A simple tool that generates NACLO‑style linguistics practice problems so stud
 1. Clone the repo:
 
    ```bash
-   git clone https://github.com/yourusername/naclo_generator.git
-   cd naclo_generator
+   git clone https://github.com/yourusername/naclo-practice-problem-generator
+   cd naclo-practice-problem-generator
    ```
 
 2. Install dependencies:
