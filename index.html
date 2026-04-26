@@ -10,22 +10,32 @@
     <div id="problem-area"></div>
 
     <script>
-        // Wait for the HTML to be fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const btn = document.getElementById("load-btn");
-            
-            btn.addEventListener("click", async () => {
-                try {
-                    const response = await fetch("problem.json");
-                    const problem = await response.json();
-                    
-                    let html = `<h2>${problem.title}</h2><p>${problem.instructions}</p>`;
-                    document.getElementById("problem-area").innerHTML = html;
-                } catch (err) {
-                    document.getElementById("problem-area").innerHTML = "Error loading problem: " + err;
+        // Use an IIFE (Immediately Invoked Function Expression)
+        (function() {
+            const init = () => {
+                const btn = document.getElementById("load-btn");
+                if (!btn) {
+                    console.error("Button not found!");
+                    return;
                 }
-            });
-        });
+                btn.addEventListener("click", async () => {
+                    try {
+                        const response = await fetch("problem.json");
+                        const data = await response.json();
+                        document.getElementById("problem-area").innerHTML = "<h2>" + data.title + "</h2>";
+                    } catch (e) {
+                        document.getElementById("problem-area").innerHTML = "Error: " + e.message;
+                    }
+                });
+            };
+
+            // This is a "double-check" wait
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
     </script>
 </body>
 </html>
