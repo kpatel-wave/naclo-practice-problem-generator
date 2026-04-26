@@ -1,86 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NACLO Practice Problem Generator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f5f7fa;
-        }
-        h1 {
-            color: #1e3a8a;
-        }
-        button {
-            font-size: 16px;
-            padding: 10px 20px;
-            margin: 10px 0;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #2563eb;
-        }
-        #problem-area {
-            margin-top: 20px;
-            border: 1px solid #cbd5e1;
-            padding: 15px;
-            border-radius: 6px;
-            background: #fff;
-        }
-        .example {
-            margin: 8px 0;
-            font-family: "Courier New", monospace;
-        }
-    </style>
-</head>
-<body>
-    <h1>NACLO Practice Problem Generator</h1>
-    <p>Click the button to load a sample problem.</p>
-    <button id="load-btn">Load problem</button>
-    <div id="problem-area"></div>
+<script>
+    document.getElementById("load-btn").addEventListener("click", async () => {
+        try {
+            const response = await fetch("problem.json");
+            const problem = await response.json();
 
-    <script>
-        document.getElementById("load-btn").addEventListener("click", async () => {
-            try {
-                const response = await fetch("problem.json");
-                if (!response.ok) throw new Error("Network response was not ok");
+            // This updated logic handles your new structure
+            let html = `<h2>${problem.title}</h2><p>${problem.instructions}</p>`;
+            
+            html += "<h3>Given examples:</h3><ul>";
+            problem.examples.forEach(ex => {
+                html += `<li><strong>${ex.underlying}</strong> → <strong>${ex.surface}</strong></li>`;
+            });
+            html += "</ul>";
 
-                const problem = await response.json();
-
-                let html = `
-                    <h2>${problem.title}</h2>
-                    <p>${problem.instructions.replace(/\n/g, "<br>")}</p>
-                    <h3>Given forms (examples):</h3>
-                    <ul>
-                `;
-
-                for (let example of problem.examples) {
-                    html += `<li class="example">
-                        <strong>${example.underlying}</strong> → <strong>${example.surface}</strong>
-                    </li>`;
-                }
-
-                html += "</ul><h3>Forms to figure out (unknowns):</h3><ul>";
-
-                for (let unknown of problem.unknowns) {
-                    html += `<li class="example"><strong>${unknown.underlying}</strong> → ?</li>`;
-                }
-
+            // Add unknowns if they exist
+            if (problem.unknowns && problem.unknowns.length > 0) {
+                html += "<h3>Unknowns to solve:</h3><ul>";
+                problem.unknowns.forEach(u => {
+                    html += `<li><strong>${u.underlying}</strong> → ?</li>`;
+                });
                 html += "</ul>";
-
-                document.getElementById("problem-area").innerHTML = html;
-            } catch (error) {
-                document.getElementById("problem-area").innerHTML =
-                    "<p style='color:red;'>Error loading problem: " + error.message + "</p>";
             }
-        });
-    </script>
-</body>
-</html>
 
+            document.getElementById("problem-area").innerHTML = html;
+        } catch (error) {
+            document.getElementById("problem-area").innerHTML = 
+                "<p style='color:red;'>Error loading problem. Check console for details.</p>";
+            console.error(error);
+        }
+    });
+</script>
