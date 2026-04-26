@@ -1,33 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>NACLO Practice</title>
-</head>
-<body>
-    <h1>NACLO Practice</h1>
-    <button id="load-btn">Load problem</button>
-    <div id="problem-area"></div>
-
     <script>
-        // The script is placed AFTER the button in the HTML, 
-        // so the button is guaranteed to exist.
-        const btn = document.getElementById("load-btn");
-        
-        btn.addEventListener("click", async () => {
-            console.log("Loading problem...");
+        async function loadMyProblem() {
             try {
                 const response = await fetch("problem.json");
                 const data = await response.json();
-                console.log("Data:", data);
                 
+                // 1. Start with Title and Instructions
                 let html = `<h2>${data.title}</h2><p>${data.instructions}</p>`;
+                
+                // 2. Add Examples
+                html += "<h3>Examples:</h3><ul>";
+                data.examples.forEach(ex => {
+                    html += `<li>${ex.underlying} → <strong>${ex.surface}</strong></li>`;
+                });
+                html += "</ul>";
+                
+                // 3. Add Unknowns
+                html += "<h3>Unknowns:</h3><ul>";
+                data.unknowns.forEach(u => {
+                    html += `<li>${u.underlying} → ?</li>`;
+                });
+                html += "</ul>";
+                
                 document.getElementById("problem-area").innerHTML = html;
             } catch (err) {
-                console.error("Error:", err);
-                document.getElementById("problem-area").innerHTML = "Error: " + err.message;
+                document.getElementById("problem-area").innerHTML = "Error: " + err;
             }
-        });
+        }
     </script>
-</body>
-</html>
