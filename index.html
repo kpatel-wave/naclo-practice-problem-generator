@@ -1,29 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>NACLO Debug</title></head>
+<body>
+    <h1>NACLO Debugger</h1>
+    <button onclick="runTest()">Click to Load</button>
+    <div id="status">Status: Waiting...</div>
+    <div id="problem-area"></div>
+
     <script>
-        async function loadMyProblem() {
+        async function runTest() {
+            const status = document.getElementById("status");
+            const area = document.getElementById("problem-area");
+            status.innerHTML = "Status: Starting...";
+            
             try {
+                status.innerHTML = "Status: Fetching...";
                 const response = await fetch("problem.json");
+                status.innerHTML = "Status: Fetch OK. Parsing...";
                 const data = await response.json();
+                status.innerHTML = "Status: JSON Loaded!";
                 
-                // 1. Start with Title and Instructions
-                let html = `<h2>${data.title}</h2><p>${data.instructions}</p>`;
-                
-                // 2. Add Examples
-                html += "<h3>Examples:</h3><ul>";
-                data.examples.forEach(ex => {
-                    html += `<li>${ex.underlying} → <strong>${ex.surface}</strong></li>`;
-                });
-                html += "</ul>";
-                
-                // 3. Add Unknowns
-                html += "<h3>Unknowns:</h3><ul>";
-                data.unknowns.forEach(u => {
-                    html += `<li>${u.underlying} → ?</li>`;
-                });
-                html += "</ul>";
-                
-                document.getElementById("problem-area").innerHTML = html;
+                // If it gets here, show the title
+                area.innerHTML = "<h2>" + data.title + "</h2>";
             } catch (err) {
-                document.getElementById("problem-area").innerHTML = "Error: " + err;
+                status.innerHTML = "Status: FAILED. Error: " + err.message;
             }
         }
     </script>
+</body>
+</html>
