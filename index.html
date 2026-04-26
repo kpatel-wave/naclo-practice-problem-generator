@@ -1,32 +1,31 @@
-<script>
-    document.getElementById("load-btn").addEventListener("click", async () => {
-        try {
-            const response = await fetch("problem.json");
-            const problem = await response.json();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NACLO Practice</title>
+</head>
+<body>
+    <h1>NACLO Practice</h1>
+    <button id="load-btn">Load problem</button>
+    <div id="problem-area"></div>
 
-            // This updated logic handles your new structure
-            let html = `<h2>${problem.title}</h2><p>${problem.instructions}</p>`;
+    <script>
+        // Wait for the HTML to be fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById("load-btn");
             
-            html += "<h3>Given examples:</h3><ul>";
-            problem.examples.forEach(ex => {
-                html += `<li><strong>${ex.underlying}</strong> → <strong>${ex.surface}</strong></li>`;
+            btn.addEventListener("click", async () => {
+                try {
+                    const response = await fetch("problem.json");
+                    const problem = await response.json();
+                    
+                    let html = `<h2>${problem.title}</h2><p>${problem.instructions}</p>`;
+                    document.getElementById("problem-area").innerHTML = html;
+                } catch (err) {
+                    document.getElementById("problem-area").innerHTML = "Error loading problem: " + err;
+                }
             });
-            html += "</ul>";
-
-            // Add unknowns if they exist
-            if (problem.unknowns && problem.unknowns.length > 0) {
-                html += "<h3>Unknowns to solve:</h3><ul>";
-                problem.unknowns.forEach(u => {
-                    html += `<li><strong>${u.underlying}</strong> → ?</li>`;
-                });
-                html += "</ul>";
-            }
-
-            document.getElementById("problem-area").innerHTML = html;
-        } catch (error) {
-            document.getElementById("problem-area").innerHTML = 
-                "<p style='color:red;'>Error loading problem. Check console for details.</p>";
-            console.error(error);
-        }
-    });
-</script>
+        });
+    </script>
+</body>
+</html>
