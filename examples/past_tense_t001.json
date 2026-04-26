@@ -1,0 +1,40 @@
+{
+  "id": "t001",
+  "task_type": "t001",
+  "title": "Past Tense Formation",
+  "instructions": "Here is a made‑up language with English‑style past‑tense verbs.\nEach verb has a base form and a past‑tense form.\n\n1. Study the examples and figure out the rule for forming the past tense.\n2. Use this rule to fill in the missing past‑tense forms for the unknown verbs.",
+  "examples": [
+    {
+      "underlying": "talk",
+      "surface": "talked"
+    },
+    {
+      "underlying": "climb",
+      "surface": "climbed"
+    },
+    {
+      "underlying": "jump",
+      "surface": "jumped"
+    },
+    {
+      "underlying": "walk",
+      "surface": "walked"
+    },
+    {
+      "underlying": "play",
+      "surface": "played"
+    }
+  ],
+  "unknowns": [
+    {
+      "underlying": "walk"
+    },
+    {
+      "underlying": "play"
+    },
+    {
+      "underlying": "jump"
+    }
+  ],
+  "rule_hint": "Add the suffix 'ed' to form the past tense."
+}
