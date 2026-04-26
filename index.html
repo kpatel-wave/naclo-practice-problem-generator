@@ -1,35 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>NACLO Practice</title>
-</head>
-<body>
-    <h1>NACLO Practice</h1>
-    <button id="load-btn">Load problem</button>
-    <div id="problem-area"></div>
-
     <script>
-        // Use an IIFE (Immediately Invoked Function Expression)
         (function() {
             const init = () => {
                 const btn = document.getElementById("load-btn");
-                if (!btn) {
-                    console.error("Button not found!");
-                    return;
-                }
                 btn.addEventListener("click", async () => {
                     try {
                         const response = await fetch("problem.json");
                         const data = await response.json();
-                        document.getElementById("problem-area").innerHTML = "<h2>" + data.title + "</h2>";
+                        
+                        // Build the full problem display
+                        let html = `<h2>${data.title}</h2><p>${data.instructions}</p>`;
+                        
+                        html += "<h3>Examples:</h3><ul>";
+                        data.examples.forEach(ex => {
+                            html += `<li>${ex.underlying} → <strong>${ex.surface}</strong></li>`;
+                        });
+                        html += "</ul>";
+                        
+                        html += "<h3>Unknowns:</h3><ul>";
+                        data.unknowns.forEach(u => {
+                            html += `<li>${u.underlying} → ?</li>`;
+                        });
+                        html += "</ul>";
+                        
+                        document.getElementById("problem-area").innerHTML = html;
                     } catch (e) {
                         document.getElementById("problem-area").innerHTML = "Error: " + e.message;
                     }
                 });
             };
 
-            // This is a "double-check" wait
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {
@@ -37,5 +36,3 @@
             }
         })();
     </script>
-</body>
-</html>
